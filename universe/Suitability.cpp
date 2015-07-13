@@ -19,7 +19,39 @@
 #include "../util/Logger.h"
 #include "../util/MultiplayerCommon.h"
 
-std::string GetBestSuitable(const std::map<std::string, std::pair<PlanetEnvironment, float> >& suitabilities) {
+int ColonyBuildingCostCmp(int empire_id, int location_id, const std::string species1,
+                          const std::string species2) {
+    int retval = 0;
+    const Empire* empire = GetEmpire(empire_id);
+
+    if (empire) {
+        ProductionQueue::ProductionItem item1(BT_BUILDING, "BLD_COL_" + species1.substr(3));
+        ProductionQueue::ProductionItem item2(BT_BUILDING, "BLD_COL_" + species2.substr(3));
+
+        std::pair<double, int> cost_time1 = empire->ProductionCostAndTime(item1, location_id);
+        std::pair<double, int> cost_time2 = empire->ProductionCostAndTime(item2, location_id);
+
+        // Look at number of turns to build
+        if (cost_time1.second < cost_time2.second) {
+            return -1;
+        } else if (cost_time1.second > cost_time2.second) {
+            return 1;
+        } else {
+            // They are equal, look at PP cost
+            if (cost_time1.first < cost_time2.first) {
+                return -1;
+            } else if (cost_time1.first > cost_time2.first) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+    return retval;
+}
+
+std::string GetBestSuitable(const std::map<std::string, std::pair<PlanetEnvironment, float> >& suitabilities,
+                            int empire_id /* = INVALID_OBJECT_ID */, int location_id /* = INVALID_OBJECT_ID */) {
     float best_suitable = -100000000000000.0f;
     std::string best_species;
     for (std::map<std::string, std::pair<PlanetEnvironment, float> >::const_iterator it = suitabilities.begin();
@@ -30,6 +62,15 @@ std::string GetBestSuitable(const std::map<std::string, std::pair<PlanetEnvironm
         if (suitability > best_suitable) {
             best_suitable = suitability;
             best_species = species_name;
+        } else if (suitability == best_suitable) {
+            // Choose the one which is cheaper to produce (exobots are usually costlier)
+            if ((empire_id != INVALID_OBJECT_ID) && (location_id != INVALID_OBJECT_ID)) {
+                int ret = ColonyBuildingCostCmp(empire_id, location_id, best_species, species_name);
+                if (ret > 0) {
+                    best_suitable = suitability;
+                    best_species = species_name;
+                }
+            }
         }
     }
     return best_species;

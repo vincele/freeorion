@@ -4,6 +4,7 @@
 
 #include "Enums.h"
 #include "TemporaryPtr.h"
+#include "UniverseObject.h"
 
 #include "../util/Export.h"
 
@@ -22,6 +23,7 @@ FO_COMMON_API std::map<std::string, std::pair<PlanetEnvironment, float> > GetSui
                                                                                                      const std::set<std::string>& species_names);
 
 ///< choose the best suitable species from the given set
-FO_COMMON_API std::string GetBestSuitable(const std::map<std::string, std::pair<PlanetEnvironment, float> >& suitabilities);
+FO_COMMON_API std::string GetBestSuitable(const std::map<std::string, std::pair<PlanetEnvironment, float> >& suitabilities,
+                                          int empire_id = INVALID_OBJECT_ID, int location_id = INVALID_OBJECT_ID);
 
 #endif // _Suitability_h_
