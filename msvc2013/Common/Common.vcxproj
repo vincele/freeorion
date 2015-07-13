@@ -217,6 +217,7 @@
     <ClInclude Include="..\..\universe\Enums.h" />
     <ClInclude Include="..\..\universe\Field.h" />
     <ClInclude Include="..\..\universe\Fleet.h" />
+    <ClInclude Include="..\..\universe\Suitability.h" />
     <ClInclude Include="..\..\util\blocking_combiner.h" />
     <ClInclude Include="..\..\universe\Meter.h" />
     <ClInclude Include="..\..\universe\ObjectMap.h" />
@@ -268,6 +269,7 @@
     <ClCompile Include="..\..\network\Message.cpp" />
     <ClCompile Include="..\..\network\MessageQueue.cpp" />
     <ClCompile Include="..\..\network\Networking.cpp" />
+    <ClCompile Include="..\..\universe\Suitability.cpp" />
     <ClCompile Include="..\..\util\EnumText.cpp" />
     <ClCompile Include="..\..\util\SaveGamePreviewUtils.cpp" />
     <ClCompile Include="..\..\util\ScopedTimer.cpp" />
